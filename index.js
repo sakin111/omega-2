@@ -9,8 +9,15 @@ const port = process.env.PORT || 5000;
 
 
 
+const corsOptions = {
+  origin: ['http://localhost:5173', 'https://motela.netlify.app'],
+  credentials: true,
+};
+
+
+
 app.use(express.json())
-app.use(cors())
+app.use(cors(corsOptions))
 
 
 const uri = `mongodb+srv://${process.env.MONGO_user}:${process.env.MONGO_pass}@cluster0.ubtwufv.mongodb.net/?retryWrites=true&w=majority`;
