@@ -25,6 +25,11 @@ const client = new MongoClient(uri, {
 });
 
 
+
+
+
+
+
 async function run() {
   try {
 
@@ -39,7 +44,7 @@ async function run() {
 app.post('/jwt', async (req, res) => {
   try {
     const user = req.body;
-    const token = jwt.sign(user, process.env.JWT_access_TOKEN, { expiresIn: '360d' });
+    const token = await jwt.sign(user, process.env.JWT_access_TOKEN, { expiresIn: '360d' });
     res.send({ token });
   } catch (error) {
     console.error('Error generating JWT token:', error);
@@ -99,7 +104,8 @@ const verifyAdmin = async (req, res, next) => {
     app.get("/slider", async (req, res) => {
       try {
         const result = await SliderCollection.find().toArray();
-        res.send(result); // Send the data as JSON response
+        res.send(result); 
+        console.log(result)
       } catch (error) {
         console.error("Error fetching slider data:", error);
         res.status(500).json({ error: "Internal Server Error" }); // Handle errors gracefully
@@ -277,10 +283,17 @@ app.get("/rooms/:id" , async(req,res) =>{
 
 
 
+
+
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
-
+    if (result.ok === 1) {
+      console.log("Ping successful:", result);
+      console.log("Latency:", latency, "ms");
+  } else {
+      console.error("Ping failed:", result);
+  }
   }
 }
 run().catch(console.dir);
